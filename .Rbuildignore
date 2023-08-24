@@ -2,3 +2,6 @@
 ^\.Rproj\.user$
 ^vignettes/MSE-Comparisons\.Rmd$
 ^LICENSE\.md$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

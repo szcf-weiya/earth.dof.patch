@@ -1,14 +1,17 @@
 Package: earth.dof.patch
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Correct DoF in earth Package
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Lijun Wang [aut, cre, cph]
+Maintainer: Lijun Wang <szcfweiya@gmail.com>
+Description: Provide a patch (correction) on degrees of freedom (dof) of MARS 
+    We propose an adaptive way to set the penalty factor (and hence degrees of freedom)
+    during the model training procedure of Multivariate Adaptive Regression Splines. The
+    correction has been shown to achieve a better performance.
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
+URL: https://hohoweiya.xyz/earth.dof.patch
 Imports:
   earth
 Suggests: 

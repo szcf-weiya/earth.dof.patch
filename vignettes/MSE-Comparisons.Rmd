@@ -24,14 +24,15 @@ gen_data_mars = function(N = 100, p = 2) {
   x2_plus = (x2 > 0.8) * (x2 - 0.8)
   y0 = x1_plus + x1_plus * x2_plus
   y = y0 + rnorm(N) * 0.12
-  x = cbind(x1, x2, matrix(rnorm(N*(p-2), nrow = N)))
+  x = cbind(x1, x2, matrix(rnorm(N*(p-2)), nrow = N))
   return(list(x = x, y = y, y0 = y0))
 }
 ```
 
 ```{r}
+set.seed(1234)
 N = 100
-p = 10
+p = 50
 d = 1
 nk = 100
 train_data = gen_data_mars(N, p)
@@ -45,5 +46,7 @@ yhat2 = predict(fit2, test_data$x)
 mse1 = mean((yhat1 - test_data$y0)^2)
 mse2 = mean((yhat2 - test_data$y0)^2)
 mse0 = mean((mean(test_data$y) - test_data$y0)^2)
-cat("the proportion of MSE decrease is: ", (mse0 - mse1) / mse1, " and ", (mse0 - mse2)/mse2)
+cat("the proportion of MSE decrease is: ", (mse0 - mse1) / mse0, " and ", (mse0 - mse2)/mse0)
 ```
+
+More comprehensive comparisons can be found in our paper.
