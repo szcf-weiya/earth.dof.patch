@@ -1,2 +1,4 @@
-destination: docs
 url: https://hohoweiya.xyz/earth.dof.patch
+template:
+  bootstrap: 5
+
