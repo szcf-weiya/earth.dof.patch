@@ -1,0 +1,49 @@
+---
+title: "MSE Comparisons"
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(earth)
+library(earth.dof.patch) # our proposed package
+```
+
+Generate simulation data,
+
+```{r}
+gen_data_mars = function(N = 100, p = 2) {
+  x1 = rnorm(N)
+  x2 = rnorm(N)
+  x1_plus = (x1 > 1) * (x1 - 1)
+  x2_plus = (x2 > 0.8) * (x2 - 0.8)
+  y0 = x1_plus + x1_plus * x2_plus
+  y = y0 + rnorm(N) * 0.12
+  x = cbind(x1, x2, matrix(rnorm(N*(p-2), nrow = N)))
+  return(list(x = x, y = y, y0 = y0))
+}
+```
+
+```{r}
+N = 100
+p = 10
+d = 1
+nk = 100
+train_data = gen_data_mars(N, p)
+test_data = gen_data_mars(N*10, p)
+fit1 = earth(train_data$x, train_data$y, degree = d, nk = nk)
+# calculate penalty factor
+res = sol_mars_df_and_penalty(d = 1, n = N, p = p, nk = nk)
+fit2 = earth(train_data$x, train_data$y, penalty = res$penalty, nk = nk)
+yhat1 = predict(fit1, test_data$x)
+yhat2 = predict(fit2, test_data$x)
+mse1 = mean((yhat1 - test_data$y0)^2)
+mse2 = mean((yhat2 - test_data$y0)^2)
+mse0 = mean((mean(test_data$y) - test_data$y0)^2)
+cat("the proportion of MSE decrease is: ", (mse0 - mse1) / mse1, " and ", (mse0 - mse2)/mse2)
+```
