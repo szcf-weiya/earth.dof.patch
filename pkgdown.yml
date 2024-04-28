@@ -1,9 +1,11 @@
-pandoc: 2.19.2
-pkgdown: 2.0.7
+pandoc: 3.1.11
+pkgdown: 2.0.9
 pkgdown_sha: ~
 articles:
   MSE-Comparisons: MSE-Comparisons.html
-last_built: 2023-08-29T01:18Z
+  ozone: ozone.html
+  spam: spam.html
+last_built: 2024-04-28T04:23Z
 urls:
   reference: https://hohoweiya.xyz/earth.dof.patch/reference
   article: https://hohoweiya.xyz/earth.dof.patch/articles

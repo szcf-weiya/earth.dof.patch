@@ -13,6 +13,12 @@
     <loc>https://hohoweiya.xyz/earth.dof.patch/articles/index.html</loc>
   </url>
   <url>
+    <loc>https://hohoweiya.xyz/earth.dof.patch/articles/ozone.html</loc>
+  </url>
+  <url>
+    <loc>https://hohoweiya.xyz/earth.dof.patch/articles/spam.html</loc>
+  </url>
+  <url>
     <loc>https://hohoweiya.xyz/earth.dof.patch/authors.html</loc>
   </url>
   <url>
@@ -22,9 +28,18 @@
     <loc>https://hohoweiya.xyz/earth.dof.patch/reference/calc_df_mars.html</loc>
   </url>
   <url>
+    <loc>https://hohoweiya.xyz/earth.dof.patch/reference/correct_df.html</loc>
+  </url>
+  <url>
+    <loc>https://hohoweiya.xyz/earth.dof.patch/reference/flag.esl.trainset.html</loc>
+  </url>
+  <url>
     <loc>https://hohoweiya.xyz/earth.dof.patch/reference/index.html</loc>
   </url>
   <url>
     <loc>https://hohoweiya.xyz/earth.dof.patch/reference/sol_mars_df_and_penalty.html</loc>
+  </url>
+  <url>
+    <loc>https://hohoweiya.xyz/earth.dof.patch/reference/spam.html</loc>
   </url>
 </urlset>
