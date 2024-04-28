@@ -1,0 +1,72 @@
+---
+title: "Application to the Spam Email Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{spam}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(earth)
+library(earth.dof.patch)
+```
+
+The `spam` data has been frequently used in The Elements of Statistical Learning (ESL) book. The data consists of information from 4601 email messages, in a study to try to predict whether the email was spam (i.e., junk email). The data can be accessible from <https://archive.ics.uci.edu/dataset/94/spambase> or <https://github.com/szcf-weiya/ESL-CN/tree/master/data/Spam>.
+
+Here, we also include the data into our package, and one can simply load it as follows:
+
+```{r}
+data("spam")
+head(spam)
+data("flag.esl.trainset")
+spam.train = spam[flag.esl.trainset == 0, ]
+spam.test = spam[flag.esl.trainset == 1, ]
+```
+
+where `flag.esl.trainset` is the indicator for training set and test set used in the ESL site.
+
+Now we compare the performance of the original MARS (via `earth`) and our proposed MARS with corrected degrees of freedom.
+
+```{r}
+compare_class_table = function(degree = 1) {
+  mod = earth(class ~ ., data = spam.train, degree = degree)
+  pred = predict(mod, newdata = spam.test, type = "class")
+  tbl = table(pred, truth = spam.test$class)
+  cat("the confusion table is:\n")
+  print(tbl)
+  cat("the confusion table in proportion is:\n")
+  print(tbl / sum(tbl))
+  cat("the error rate is: ", (tbl[2] + tbl[3]) / sum(tbl), "\n" )
+  cat("==============\n")
+  dfs = correct_df(mod)
+  cat("use corrected penalty = ", dfs$penalty, "\n")
+  mod1 = earth(class ~ ., data = spam.train, degree = degree, penalty = dfs$penalty)
+  pred1 = predict(mod1, newdata = spam.test, type = "class")
+  tbl1 = table(pred1, truth = spam.test$class)
+  cat("the confusion table is:\n")
+  print(tbl1)
+  cat("the confusion table in proportion is:\n")
+  print(tbl1 / sum(tbl1))
+  cat("the error rate is: ", (tbl1[2] + tbl1[3]) / sum(tbl1), "\n" )
+}
+```
+
+Firstly, when we only use linear terms, the performance are
+
+```{r}
+compare_class_table(1)
+```
+
+Furthermore, when we allow second-degree interactions, the performance are
+
+```{r}
+compare_class_table(2)
+```

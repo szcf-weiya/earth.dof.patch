@@ -1,0 +1,95 @@
+---
+title: "Application to Ozone Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{ozone}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(earth.dof.patch)
+library(earth)
+```
+
+## Ozone Data
+
+The Ozone data is shift with `earth` package, called `ozone1`
+
+```{r}
+head(ozone1)
+```
+
+```{r}
+mod = earth(O3 ~ ., data = ozone1)
+```
+
+```{r}
+summary(mod)
+```
+
+then calculate the corrected penalty given the fitted earth object `mod`,
+
+```{r}
+res = correct_df(mod)
+```
+
+refit the earth model with new penalty
+
+```{r}
+mod1 = earth(O3 ~ ., data = ozone1, penalty = res$penalty)
+```
+
+```{r}
+summary(mod1)
+```
+
+
+perform a 5-fold cross-validation
+
+```{r}
+cv_compare = function(nfold = 5, degree = 2) {
+  n = nrow(ozone1)
+  folds = sample(1:nfold, n, replace = T)
+  errs = matrix(0, nrow = 2, ncol = nfold)
+  for (k in 1:nfold) {
+    train = ozone1[folds != k, ]
+    test = ozone1[folds == k, ]
+    mod = earth(O3 ~ ., data = train, degree = degree)
+    dfs = correct_df(mod)
+    cat("corrected penalty = ", dfs$penalty, "\n")
+    mod1 = earth(O3 ~ ., data = train, degree = degree, penalty = dfs$penalty)
+    pred = predict(mod, newdata = test)
+    pred1 = predict(mod1, newdata = test)
+    errs[, k] = c(mean((test$O3 - pred)^2), mean((test$O3 - pred1)^2))
+  }
+  mu = rowMeans(errs)
+  se = apply(errs, 1, sd) / sqrt(nfold)
+  cat("CV error = \n")
+  print(mu)
+  cat("CV error se = \n")
+  print(se)
+  return(errs)
+}
+```
+
+when we only use linear terms,
+
+```{r}
+set.seed(1234)
+errs.d1 = cv_compare(5, 1)
+```
+
+and if we allow second-degree interactions,
+
+```{r}
+set.seed(1234)
+errs.d2 = cv_compare(5, 2)
+```

@@ -1,5 +1,10 @@
 ---
-title: "MSE Comparisons"
+title: "Simulations: MSE Comparisons"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mse}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, include = FALSE}
@@ -14,7 +19,7 @@ library(earth)
 library(earth.dof.patch) # our proposed package
 ```
 
-Generate simulation data,
+First of all, we generate simulation data as follows:
 
 ```{r}
 gen_data_mars = function(N = 100, p = 2) {
@@ -34,13 +39,39 @@ set.seed(1234)
 N = 100
 p = 50
 d = 1
-nk = 100
 train_data = gen_data_mars(N, p)
 test_data = gen_data_mars(N*10, p)
-fit1 = earth(train_data$x, train_data$y, degree = d, nk = nk)
-# calculate penalty factor
-res = sol_mars_df_and_penalty(d = 1, n = N, p = p, nk = nk)
-fit2 = earth(train_data$x, train_data$y, penalty = res$penalty, nk = nk)
+```
+
+Then we first run MARS via `earth`,
+
+```{r}
+fit1 = earth(train_data$x, train_data$y, degree = d)
+```
+
+To correct the degrees of freedom, we can explicitly call the solver function,
+
+```{r}
+res = sol_mars_df_and_penalty(d = 1, n = N, p = p, nk = fit1$nk)
+res
+```
+
+Alternatively, one can simply input the fitted `earth.object`,
+
+```{r}
+res = correct_df(fit1)
+res
+```
+
+Then we pass the corrected penalty to `earth` function and re-run,
+
+```{r}
+fit2 = earth(train_data$x, train_data$y, penalty = res$penalty)
+```
+
+Now we can compare their MSE,
+
+```{r}
 yhat1 = predict(fit1, test_data$x)
 yhat2 = predict(fit2, test_data$x)
 mse1 = mean((yhat1 - test_data$y0)^2)

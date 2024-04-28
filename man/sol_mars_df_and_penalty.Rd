@@ -4,17 +4,7 @@
 \alias{sol_mars_df_and_penalty}
 \title{Solve penalty factor by equating empirical df}
 \usage{
-sol_mars_df_and_penalty(
-  n = 20,
-  p = 2,
-  N = 100,
-  nk = 5,
-  tol = 0.001,
-  maxiter = 10,
-  verbose = FALSE,
-  fixxy = TRUE,
-  d = 1
-)
+sol_mars_df_and_penalty(n = 20, p = 2, N = 100, nk = 5, d = 1, penalty = NULL)
 }
 \arguments{
 \item{n}{sample size}
@@ -25,15 +15,9 @@ sol_mars_df_and_penalty(
 
 \item{nk}{maximum number of model terms before pruning in earth::earth}
 
-\item{tol}{stop criteria}
-
-\item{maxiter}{maximum number of iterations}
-
-\item{verbose}{whether to print debug information}
-
-\item{fixxy}{whether to fix x and y}
-
 \item{d}{maximum degree of interactions}
+
+\item{penalty}{the initial penalty. If not specified, it is `d + 1`.}
 }
 \value{
 a list of three elements \describe{
@@ -44,4 +28,8 @@ a list of three elements \describe{
 }
 \description{
 Solve penalty factor by equating empirical df
+}
+\note{
+Note that `penalty` only works in the backward procedure, so we do not
+need to a while loop to ensure the self-consistency.
 }
