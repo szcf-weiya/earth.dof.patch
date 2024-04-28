@@ -11,7 +11,8 @@ Description: Provide a patch (correction) on degrees of freedom (dof) of MARS
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
-URL: https://hohoweiya.xyz/earth.dof.patch
+URL: https://github.com/szcf-weiya/earth.dof.patch
+BugReports: https://github.com/szcf-weiya/earth.dof.patch/issues
 Imports:
   earth
 Suggests: 

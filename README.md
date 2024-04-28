@@ -24,7 +24,7 @@ df = correct_df(model)
 then refit the MARS model by specifying the corrected degrees of freedom,
 
 ```r
-model.correct = earth(y ~ ., data = df, penalty = df$penalty)
+model.corrected = earth(y ~ ., data = data, penalty = df$penalty)
 ```
 
 More examples can be found on the auto-generated vignettes <https://hohoweiya.xyz/earth.dof.patch/>, including
