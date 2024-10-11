@@ -5,7 +5,7 @@
 
 `earth.dof.patch` is an R package providing a patch (correction) on degrees of freedom (dof) of MARS (Multivariate Adaptive Regression Splines), whose R package is called `earth`. The correction has been shown to achieve a better performance, see more details in our paper.
 
-> Wang, L., Zhao, H., & Fan, X. (2023). Degrees of Freedom: Search Cost and Self-consistency (arXiv:2308.13630). arXiv. http://arxiv.org/abs/2308.13630
+> Wang, L., Zhao, H., & Fan, X. (2024). Degrees of Freedom: Search Cost and Self-consistency. Journal of Computational and Graphical Statistics, 0(ja), 1–23. https://doi.org/10.1080/10618600.2024.2388545
 
 ## :rocket: Only One Line to Correct
 
