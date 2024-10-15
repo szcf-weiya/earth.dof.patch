@@ -23,6 +23,13 @@ library(earth)
 
 The Ozone data is shift with `earth` package, called `ozone1`
 
+To check the performance in higher dimension, we can manually create 50 nuisance features.
+
+```{r, eval=FALSE}
+set.seed(1234)
+ozone1 = cbind(ozone1, matrix(rnorm(nrow(ozone1) * 50), ncol = 50))
+```
+
 ```{r}
 head(ozone1)
 ```
@@ -57,15 +64,20 @@ perform a 5-fold cross-validation
 ```{r}
 cv_compare = function(nfold = 5, degree = 2) {
   n = nrow(ozone1)
-  folds = sample(1:nfold, n, replace = T)
+  folds = rep(1:nfold, each = n / nfold)
+  folds = folds[sample(1:n, n)] # re-order
   errs = matrix(0, nrow = 2, ncol = nfold)
+  corrected_penalty = NULL
   for (k in 1:nfold) {
     train = ozone1[folds != k, ]
     test = ozone1[folds == k, ]
     mod = earth(O3 ~ ., data = train, degree = degree)
-    dfs = correct_df(mod)
-    cat("corrected penalty = ", dfs$penalty, "\n")
-    mod1 = earth(O3 ~ ., data = train, degree = degree, penalty = dfs$penalty)
+    if (is.null(corrected_penalty)) {
+      dfs = correct_df(mod)
+      corrected_penalty = dfs$penalty
+      cat("corrected penalty = ", dfs$penalty, "\n")
+    }
+    mod1 = earth(O3 ~ ., data = train, degree = degree, penalty = corrected_penalty)
     pred = predict(mod, newdata = test)
     pred1 = predict(mod1, newdata = test)
     errs[, k] = c(mean((test$O3 - pred)^2), mean((test$O3 - pred1)^2))
