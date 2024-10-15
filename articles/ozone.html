@@ -77,7 +77,12 @@
 </h2>
 <p>The Ozone data is shift with <code>earth</code> package, called
 <code>ozone1</code></p>
+<p>To check the performance in higher dimension, we can manually create
+50 nuisance features.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">ozone1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">ozone1</span>, <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ozone1</span><span class="op">)</span> <span class="op">*</span> <span class="fl">50</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">50</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">ozone1</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   O3   vh wind humidity temp  ibh dpg ibt vis doy</span></span>
 <span><span class="co">#&gt; 1  3 5710    4       28   40 2693 -25  87 250  33</span></span>
@@ -86,9 +91,9 @@
 <span><span class="co">#&gt; 4  6 5720    4       69   35 1568  15 121  60  36</span></span>
 <span><span class="co">#&gt; 5  4 5790    6       19   45 2631 -33 123 100  37</span></span>
 <span><span class="co">#&gt; 6  4 5790    3       25   55  554 -28 182 250  38</span></span></code></pre></div>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">ozone1</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">ozone1</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call: earth(formula=O3~., data=ozone1)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -113,12 +118,12 @@
 <span><span class="co">#&gt; GCV 14.61004    RSS 4172.671    GRSq 0.7730502    RSq 0.8023874</span></span></code></pre></div>
 <p>then calculate the corrected penalty given the fitted earth object
 <code>mod</code>,</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">res</span> <span class="op">=</span> <span class="fu"><a href="../reference/correct_df.html">correct_df</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span></code></pre></div>
 <p>refit the earth model with new penalty</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="va">mod1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">ozone1</span>, penalty <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">penalty</span><span class="op">)</span></span></code></pre></div>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">mod1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">ozone1</span>, penalty <span class="op">=</span> <span class="va">res</span><span class="op">$</span><span class="va">penalty</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/summary.html" class="external-link">summary</a></span><span class="op">(</span><span class="va">mod1</span><span class="op">)</span></span>
 <span><span class="co">#&gt; Call: earth(formula=O3~., data=ozone1, penalty=res$penalty)</span></span>
 <span><span class="co">#&gt; </span></span>
@@ -141,18 +146,23 @@
 <span><span class="co">#&gt; Number of terms at each degree of interaction: 1 10 (additive model)</span></span>
 <span><span class="co">#&gt; GCV 15.12914    RSS 4234.168    GRSq 0.7649866    RSq 0.7994749</span></span></code></pre></div>
 <p>perform a 5-fold cross-validation</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">cv_compare</span> <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">nfold</span> <span class="op">=</span> <span class="fl">5</span>, <span class="va">degree</span> <span class="op">=</span> <span class="fl">2</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="va">n</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">nrow</a></span><span class="op">(</span><span class="va">ozone1</span><span class="op">)</span></span>
-<span>  <span class="va">folds</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">nfold</span>, <span class="va">n</span>, replace <span class="op">=</span> <span class="cn">T</span><span class="op">)</span></span>
+<span>  <span class="va">folds</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">nfold</span>, each <span class="op">=</span> <span class="va">n</span> <span class="op">/</span> <span class="va">nfold</span><span class="op">)</span></span>
+<span>  <span class="va">folds</span> <span class="op">=</span> <span class="va">folds</span><span class="op">[</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="va">n</span>, <span class="va">n</span><span class="op">)</span><span class="op">]</span> <span class="co"># re-order</span></span>
 <span>  <span class="va">errs</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">2</span>, ncol <span class="op">=</span> <span class="va">nfold</span><span class="op">)</span></span>
+<span>  <span class="va">corrected_penalty</span> <span class="op">=</span> <span class="cn">NULL</span></span>
 <span>  <span class="kw">for</span> <span class="op">(</span><span class="va">k</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="va">nfold</span><span class="op">)</span> <span class="op">{</span></span>
 <span>    <span class="va">train</span> <span class="op">=</span> <span class="va">ozone1</span><span class="op">[</span><span class="va">folds</span> <span class="op">!=</span> <span class="va">k</span>, <span class="op">]</span></span>
 <span>    <span class="va">test</span> <span class="op">=</span> <span class="va">ozone1</span><span class="op">[</span><span class="va">folds</span> <span class="op">==</span> <span class="va">k</span>, <span class="op">]</span></span>
 <span>    <span class="va">mod</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, degree <span class="op">=</span> <span class="va">degree</span><span class="op">)</span></span>
-<span>    <span class="va">dfs</span> <span class="op">=</span> <span class="fu"><a href="../reference/correct_df.html">correct_df</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"corrected penalty = "</span>, <span class="va">dfs</span><span class="op">$</span><span class="va">penalty</span>, <span class="st">"\n"</span><span class="op">)</span></span>
-<span>    <span class="va">mod1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, degree <span class="op">=</span> <span class="va">degree</span>, penalty <span class="op">=</span> <span class="va">dfs</span><span class="op">$</span><span class="va">penalty</span><span class="op">)</span></span>
+<span>    <span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/NULL.html" class="external-link">is.null</a></span><span class="op">(</span><span class="va">corrected_penalty</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
+<span>      <span class="va">dfs</span> <span class="op">=</span> <span class="fu"><a href="../reference/correct_df.html">correct_df</a></span><span class="op">(</span><span class="va">mod</span><span class="op">)</span></span>
+<span>      <span class="va">corrected_penalty</span> <span class="op">=</span> <span class="va">dfs</span><span class="op">$</span><span class="va">penalty</span></span>
+<span>      <span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"corrected penalty = "</span>, <span class="va">dfs</span><span class="op">$</span><span class="va">penalty</span>, <span class="st">"\n"</span><span class="op">)</span></span>
+<span>    <span class="op">}</span></span>
+<span>    <span class="va">mod1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/earth/man/earth.html" class="external-link">earth</a></span><span class="op">(</span><span class="va">O3</span> <span class="op">~</span> <span class="va">.</span>, data <span class="op">=</span> <span class="va">train</span>, degree <span class="op">=</span> <span class="va">degree</span>, penalty <span class="op">=</span> <span class="va">corrected_penalty</span><span class="op">)</span></span>
 <span>    <span class="va">pred</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod</span>, newdata <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
 <span>    <span class="va">pred1</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/stats/predict.html" class="external-link">predict</a></span><span class="op">(</span><span class="va">mod1</span>, newdata <span class="op">=</span> <span class="va">test</span><span class="op">)</span></span>
 <span>    <span class="va">errs</span><span class="op">[</span>, <span class="va">k</span><span class="op">]</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">O3</span> <span class="op">-</span> <span class="va">pred</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/mean.html" class="external-link">mean</a></span><span class="op">(</span><span class="op">(</span><span class="va">test</span><span class="op">$</span><span class="va">O3</span> <span class="op">-</span> <span class="va">pred1</span><span class="op">)</span><span class="op">^</span><span class="fl">2</span><span class="op">)</span><span class="op">)</span></span>
@@ -166,31 +176,23 @@
 <span>  <span class="kw"><a href="https://rdrr.io/r/base/function.html" class="external-link">return</a></span><span class="op">(</span><span class="va">errs</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
 <p>when we only use linear terms,</p>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">errs.d1</span> <span class="op">=</span> <span class="fu">cv_compare</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
-<span><span class="co">#&gt; corrected penalty =  3.076342 </span></span>
-<span><span class="co">#&gt; corrected penalty =  3.038618 </span></span>
-<span><span class="co">#&gt; corrected penalty =  2.950415 </span></span>
-<span><span class="co">#&gt; corrected penalty =  2.99357 </span></span>
-<span><span class="co">#&gt; corrected penalty =  2.968474 </span></span>
-<span><span class="co">#&gt; CV error = </span></span>
-<span><span class="co">#&gt; [1] 15.23453 15.27414</span></span>
-<span><span class="co">#&gt; CV error se = </span></span>
-<span><span class="co">#&gt; [1] 1.295498 1.254966</span></span></code></pre></div>
-<p>and if we allow second-degree interactions,</p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
-<span><span class="va">errs.d2</span> <span class="op">=</span> <span class="fu">cv_compare</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span></span>
-<span><span class="co">#&gt; corrected penalty =  3.940946 </span></span>
-<span><span class="co">#&gt; corrected penalty =  3.981887 </span></span>
-<span><span class="co">#&gt; corrected penalty =  3.770925 </span></span>
-<span><span class="co">#&gt; corrected penalty =  3.92098 </span></span>
-<span><span class="co">#&gt; corrected penalty =  3.982023 </span></span>
+<span><span class="va">errs.d1</span> <span class="op">=</span> <span class="fu">cv_compare</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">1</span><span class="op">)</span></span>
+<span><span class="co">#&gt; corrected penalty =  2.99357 </span></span>
 <span><span class="co">#&gt; CV error = </span></span>
-<span><span class="co">#&gt; [1] 18.74637 17.49165</span></span>
+<span><span class="co">#&gt; [1] 16.65751 16.61001</span></span>
 <span><span class="co">#&gt; CV error se = </span></span>
-<span><span class="co">#&gt; [1] 2.238761 2.204458</span></span></code></pre></div>
+<span><span class="co">#&gt; [1] 2.294709 2.266587</span></span></code></pre></div>
+<p>and if we allow second-degree interactions,</p>
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">1234</span><span class="op">)</span></span>
+<span><span class="va">errs.d2</span> <span class="op">=</span> <span class="fu">cv_compare</span><span class="op">(</span><span class="fl">5</span>, <span class="fl">2</span><span class="op">)</span></span>
+<span><span class="co">#&gt; corrected penalty =  3.92098 </span></span>
+<span><span class="co">#&gt; CV error = </span></span>
+<span><span class="co">#&gt; [1] 17.32851 17.20663</span></span>
+<span><span class="co">#&gt; CV error se = </span></span>
+<span><span class="co">#&gt; [1] 2.336629 2.423364</span></span></code></pre></div>
 </div>
   </main>
 </div>
