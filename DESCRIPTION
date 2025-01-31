@@ -1,7 +1,7 @@
 Package: earth.dof.patch
 Type: Package
 Title: Correct DoF in earth Package
-Version: 0.2.0
+Version: 0.3.0
 Author: Lijun Wang [aut, cre, cph]
 Maintainer: Lijun Wang <szcfweiya@gmail.com>
 Description: Provide a patch (correction) on degrees of freedom (dof) of MARS 

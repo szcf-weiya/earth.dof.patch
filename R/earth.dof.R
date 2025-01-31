@@ -76,17 +76,18 @@ sol_mars_df_and_penalty = function(n = 20, p = 2,
 
 #' Correct df given a fitted earth.object
 #' @param x an earth object
+#' @param N number of repetitions for approximating empirical df
 #' @return a list of three elements \describe{
 #' \item{df_cov}{empirical df based on covariance formula}
 #' \item{df_app}{average df based on mars' approximation formula}
 #' \item{penalty}{penalty factor}
 #' }
 #' @export
-correct_df = function(x) {
+correct_df = function(x, N = 100) {
   if (attr(x, "class") != "earth") {
     stop("`x` is supposed to be an earth object. Or you pass parameters to `sol_mars_df_and_penalty` to calculate the corrected penalty.")
   }
   n = nrow(x$fitted.values)
   p = ncol(x$modvars)
-  sol_mars_df_and_penalty(n = n, p = p, d = x$penalty - 1, nk = x$nk, penalty = x$penalty)
+  sol_mars_df_and_penalty(n = n, p = p, d = x$penalty - 1, nk = x$nk, penalty = x$penalty, N = N)
 }

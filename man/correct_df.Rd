@@ -4,10 +4,12 @@
 \alias{correct_df}
 \title{Correct df given a fitted earth.object}
 \usage{
-correct_df(x)
+correct_df(x, N = 100)
 }
 \arguments{
 \item{x}{an earth object}
+
+\item{N}{number of repetitions for approximating empirical df}
 }
 \value{
 a list of three elements \describe{
